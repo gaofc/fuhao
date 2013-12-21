@@ -1,5 +1,5 @@
 module.exports = { 
   cookieSecret: 'fuhao', 
   db: 'fuhao', 
-  host: 'localhost'
+  host: 'mongodb://flygfch:615600@paulo.mongohq.com:10008/fuhao'
 }; 
