@@ -5,12 +5,12 @@
 
 var express   = require('express')
   , routes     = require('./route')
-  , http      = require('http')
-  , path      = require('path');
-
-
-var MongoStore = require('connect-mongodb');
-var settings = require('./settings');
+  , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path')
+  , MongoStore = require('connect-mongo')(express)
+  , settings = require('./settings')
+  , flash = require('connect-flash');
 
 var app = express();
 
@@ -18,12 +18,13 @@ app.configure(function(){
   app.set('port', process.env.PORT || 3000);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.use(flash());
   app.use(express.favicon());
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  
+  
   app.use(express.cookieParser());
   app.use(express.session({
   secret: settings.cookieSecret,
@@ -32,7 +33,8 @@ app.configure(function(){
   })
   }));
 
-  
+  app.use(app.router);
+  app.use(express.static(path.join(__dirname, 'public')));
 
   app.use(function(req, res, next) {  
       console.log("404 handler");
@@ -47,62 +49,76 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-routes(app);
+app.use(function(req,res,next){
+    var err = req.flash('error'),
+        success = req.flash('success');
+    res.locals.user = req.session.user;
+    res.locals.error = err.length ? err : null;
+    res.locals.success = success.length ? success : null;
+    next();
+});
+
+
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });
 
 
+routes(app);
 
 
 
 
 /*
-var express = require('express');
-var routes = require('./routes');
-var user = require('./routes/user');
-var http = require('http');
-var path = require('path');
-
-var MongoStore = require('connect-mongodb');
-var settings = require('./settings');
+var express = require('express')
+  , routes = require('./routes')
+  , user = require('./routes/user')
+  , http = require('http')
+  , path = require('path')
+  , MongoStore = require('connect-mongo')(express)
+  , settings = require('./settings')
+  , flash = require('connect-flash');
 
 var app = express();
 
-// all environments
-app.set('port', process.env.PORT || 3000);
-app.set('views', __dirname + '/views');
-app.set('view engine', 'jade');
-app.use(express.favicon());
-app.use(express.logger('dev'));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-//app.use(express.router(routes));
+app.configure(function(){
+  app.set('port', process.env.PORT || 3000);
+  app.set('views', __dirname + '/views');
+  app.set('view engine', 'jade');
+  app.use(flash());
+  app.use(express.favicon());
+  app.use(express.logger('dev'));
+  app.use(express.bodyParser());
+  app.use(express.methodOverride());
+  app.use(express.cookieParser());
+  app.use(express.session({ 
+      secret: settings.cookieSecret, 
+      store: new MongoStore({ 
+      db: settings.db 
+   }) 
+  }));
+  app.use(app.router);
+  app.use(express.static(path.join(__dirname, 'public')));
+});
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-
-app.use(express.cookieParser());
-app.use(express.session({
-secret: settings.cookieSecret,
-store: new MongoStore({
-db: settings.db
-})
-}));
-
-
-
-// development only
-if ('development' == app.get('env')) {
+app.configure('development', function(){
   app.use(express.errorHandler());
-}
+});
+
+app.use(function(req,res,next){
+    var err = req.flash('error'),
+        success = req.flash('success');
+    res.locals.user = req.session.user;
+    res.locals.error = err.length ? err : null;
+    res.locals.success = success.length ? success : null;
+    next();
+});
 
 routes(app);
 
-
 http.createServer(app).listen(app.get('port'), function(){
-  console.log('Express server listening on port ' + app.get('port'));
+  console.log("Express server listening on port " + app.get('port'));
 });
+
 */

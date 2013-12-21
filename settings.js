@@ -1,5 +1,5 @@
-module.exports = {
-	cookieSecret: 'microblogbyvoid',
-	db: 'fuhao',
-	host: 'localhost',
-};
+module.exports = { 
+  cookieSecret: 'fuhao', 
+  db: 'fuhao', 
+  host: 'localhost'
+}; 
