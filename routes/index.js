@@ -5,6 +5,7 @@
 var Post = require('../models/post');
 
 exports.index = function(req, res) {
+
 	Post.get(null, function(err, posts) {
 	if (err) {
 		posts = [];
