@@ -1,0 +1,9 @@
+.row
+	each post in posts
+		.span4
+			h2
+				a(href='/u/#{post.user}') #{post.user}
+			p
+				small #{post.time}
+			p #{post.post}
+			
