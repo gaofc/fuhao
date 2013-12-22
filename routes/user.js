@@ -31,7 +31,7 @@ exports.register = function(req, res){
 		if (user)
 			err = '用户名已存在';
 		if (err) {
-			req.flash('error', err);
+			req.flash('error', err+'fuck you');
 			return res.redirect('/reg');
 		}
 		//如果不存在则新增用户

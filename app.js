@@ -10,7 +10,8 @@ var express   = require('express')
   , path = require('path')
   , MongoStore = require('connect-mongo')(express)
   , settings = require('./settings')
-  , flash = require('connect-flash');
+  , flash = require('connect-flash')
+  ,  format = require('util').format;
 
 var app = express();
 
@@ -27,9 +28,9 @@ app.configure(function(){
   
   app.use(express.cookieParser());
   app.use(express.session({
-  secret: settings.cookieSecret,
-  store: new MongoStore({
-    db: settings.db
+    secret: settings.cookieSecret,
+   store: new MongoStore({
+    url:'mongodb://fuhao:nodejs@paulo.mongohq.com:10008/fuhao'
   })
   }));
 
