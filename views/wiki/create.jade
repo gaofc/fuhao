@@ -1,0 +1,17 @@
+extends ../layout
+block content
+	form.well(action="/wiki/save",method="post")
+		input(type="hidden",name="id",value=id)
+		
+		lable.span2 Article Title :
+		input.span9(type="text",name="title",value=nodetitle,placeholder="Please input the title...")
+		if !user
+			lable.span2 Article Author :
+			input.span9(type="text",name="author",value=author,placeholder="Please input your name...")
+
+		label.span5 Content: (with 
+			a(href="http://daringfireball.net/projects/markdown/syntax",target="_blank") Markdown Syntax
+			)
+		textarea.span11(name="content",rows="30") !{content}
+		p
+		button(type="submit",class="btn") Save

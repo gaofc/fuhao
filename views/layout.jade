@@ -10,9 +10,9 @@ html
       font-family: Consolas,微软雅黑;
       }
     link(href='stylesheets/bootstrap-responsive.css', rel='stylesheet')
+    script(src='/javascripts/jquery.js')
   body
-
-    .navbar.navbar-fixed-top
+    .navbar.navbar-fixed-top.navbar-inverse
       .navbar-inner
         .container
           a.btn.btn-navbar(data-toggle='collapse', data-target='.nav-collapse')
@@ -20,11 +20,28 @@ html
             span.icon-bar
             span.icon-bar
           a.brand(href='/') FuHao 符号
-          .nav-collapse
+          .nav-collapse.collapse.navbar-inverse-collapse
             ul.nav
               li.active
                 a(href='/') 首页
-              if !locals.user
+              li
+                a(href='hole') 树洞
+              if !user
+                li
+                  a(href='/look') 随便看看
+              else
+                li
+                  a(href='/circle') 我的圈子
+                li
+                  a(href='/u/#{locals.user.name}') 我的发表
+              li
+                a(href='/destroy') 阅后即焚
+              li
+                a(href="/wiki") 博客
+              li
+                a(href="/wiki/create") 写博客
+            ul.nav.pull-right
+              if !user
                 li
                   a(href='/login') 登入
                 li
@@ -32,8 +49,6 @@ html
               else
                 li
                   a(href='/logout') 登出
-                li
-                  a(href='/u/#{locals.user.name}') 我的发表
 
     #container.container
       if locals.success
@@ -45,5 +60,5 @@ html
       footer
         p
           a(href='/') Author: Gao Fang Chao
-          |  (Contact me via fhfuhao@yeah.net)
-    script(src='/javascripts/jquery.js')
+          |  (Contact me via flygfch@163.com)
+    

@@ -1,0 +1,51 @@
+extends ../layout
+block content
+	ul.breadcrumb
+		li.active 博客
+	.page-header
+
+	table.table.table-bordered.table-hover
+		thead
+			tr
+				th 
+					i.icon-th-list
+					|  Article
+				th 
+					i.icon-user
+					|  Author
+				th 
+					i.icon-time
+					|  Time
+				th Delete
+		tbody
+		each result in results
+			tr
+				input(type="hidden",name="_id",value="#{result.id}")
+				td
+					a(href='/wiki/#{result.title}') #{result.title}
+				td 
+					i.icon-user
+					|  #{result.author}
+				td #{result.date}
+				td 
+					a(name='del',style="cursor:pointer")
+						i.icon-trash
+
+	script(type='text/javascript').
+		$("a[name='del']").bind("click", del);
+		function del() {
+			var tr = $(this).parents('tr');
+			var _id = $(this).parents('tr').find('input[type="hidden"]').val();
+			var title = $(this).parents('tr').find('td')[0].innerText;
+			if (confirm('Are you sure want to delete ' + title + ' ?')) {
+				$.post("/wiki/del", {
+					_id : _id
+				}, function(data) {
+					if (data == 'success') {
+						tr.remove();
+						alert('Success!');
+					} else
+						alert('Failed! ' + data);
+				});
+			}
+		}

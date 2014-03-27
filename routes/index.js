@@ -14,7 +14,7 @@ exports.index = function(req, res) {
 		title: '首页',
 		posts: posts,
 		user: req.session.user,
-        success:req.flash('success').toString(),
+		success:req.flash('success').toString(),
 		});
 	});
 }

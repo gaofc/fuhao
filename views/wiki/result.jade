@@ -1,0 +1,25 @@
+extends ../layout
+
+block content
+	ul.breadcrumb
+		li
+			a(href='/wiki') 博客
+			span.divider >
+		li.active !{title}
+
+	//div(style="right:10%; top:10; width:16px;height:16px; position:fixed;")
+	//	a(href="/wiki/"+id+"/edit")
+	//		img(src="/img/icons/edit.png",height="16",width="16",border="0",title="edit")
+	.span12(align="right")	
+		a(href="/wiki/"+id+"/edit")
+			img(src="/img/icon/edit.png",height="16",width="16",border="0",title="edit")
+
+
+	h1(align="center") !{title}
+	p(align="right") 
+		em 
+			i.icon-user
+			|  Author : !{author}     
+			i.icon-time
+			|  Time : !{date}
+	p !{node}

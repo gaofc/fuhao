@@ -1,6 +1,8 @@
 var mongodb = require('./db');
+var ObjectID = require('mongodb').ObjectID;
 
-function Post(username, post, time) {
+
+function Post(username, post, time, like, _id) {
     this.user = username;
     this.post = post;
     if (time) {
@@ -8,6 +10,8 @@ function Post(username, post, time) {
     } else {
         this.time = new Date();
     }
+    this._id = _id;
+    this.like = like;
 }
 
 module.exports = Post;
@@ -43,6 +47,7 @@ Post.prototype.save = function save(callback) {
 };
 
 Post.get = function get(username, callback) {
+
     mongodb.open(function (err, db) {
         if (err) {
             return callback(err);
@@ -57,7 +62,7 @@ Post.get = function get(username, callback) {
                 var query = {};
                 if (username) {
                     query.user = username;
-                    console.log(query.user);
+                    //console.log(query.user);
                 }
                 collection.find(query).sort({
                     time: -1
@@ -70,7 +75,7 @@ Post.get = function get(username, callback) {
                     var posts = [];
 
                     docs.forEach(function (doc, index) {
-                        var post = new Post(doc.user, doc.post, doc.time);
+                        var post = new Post(doc.user, doc.post, doc.time, doc.like, doc._id);
                         var now = post.time;
                         post.time = now.getFullYear() + "-" + (now.getUTCMonth()+1) + "-" + now.getUTCDate()
                                     + ' ' +now.getUTCHours() + ':' + now.getUTCMinutes() + ':' + now.getUTCSeconds();
@@ -78,6 +83,33 @@ Post.get = function get(username, callback) {
                     });
                     callback(null, posts);
                 });
+            });
+        });
+    });
+};
+
+
+Post.update = function update(post_id, key, val, callback) {
+
+    mongodb.open(function (err, db) {
+        if (err) {
+            return callback(err);
+        }
+        db.authenticate('fuhao', 'nodejs', function(err){
+            db.collection('posts', function(err, collection) {
+                if (err) {
+                    mongodb.close();
+                    return callback(err);
+                }
+                var obj_id = new ObjectID(post_id);
+                var update = { $set : {} };
+                update.$set[key] = val;
+               
+                collection.update({_id:obj_id}, update, {safe: true}, function(err) {
+
+                    callback(err);
+                });
+               
             });
         });
     });
